@@ -3,7 +3,7 @@ option=${1:---install}
 
 if [ ${option} = "--install" ]
 then
-    /usr/bin/vh --install
+    /usr/local/bin/vh --install
 elif [ ${option} = "--run" ]
 then
     # timeout for verlihub tcp

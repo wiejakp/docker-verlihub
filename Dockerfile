@@ -1,19 +1,21 @@
-FROM ubuntu-debootstrap:14.04
-MAINTAINER Martijn van Maurik <docker@vmaurik.nl>
+FROM ubuntu:20.04
+MAINTAINER Przemek Wiejak <przemek@wiejak.app>
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV HOME /root
 
-RUN apt-get update && apt-get dist-upgrade -yq && \
-    apt-get install python-dev liblua5.1-0-dev git \
-    libpcre3-dev libssl-dev mysql-client libmysqlclient-dev \
-    g++ libgeoip-dev gettext cmake wget -yq && \
+RUN apt-get update && \
+    apt-get install libpcre3-dev libssl-dev mysql-server \
+    	libmysqlclient-dev mysql-client g++ libmaxminddb-dev \
+    	libmaxminddb0 libicu-dev gettext libasprintf-dev \
+    	make cmake python2.7-dev liblua5.2-dev libperl-dev git -yq && \
     apt-get clean -y && \
     apt-get autoclean -y && \
     rm -fr /var/lib/apt && \
-    git clone https://github.com/Verlihub/verlihub-1.0.0.git /usr/src/verlihub && \
-    cd /usr/src/verlihub && chmod +x ./configure && ./configure --prefix=/usr && \
-    make && make install
+    git clone https://github.com/Verlihub/verlihub.git /usr/src/verlihub && \
+    cd /usr/src/verlihub && \
+    mkdir -p build && cd build && \
+    cmake .. &&  make && make install
 
 ADD start.sh /usr/local/bin/start.sh
 
