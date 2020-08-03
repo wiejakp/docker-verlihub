@@ -6,9 +6,9 @@ ENV HOME /root
 
 RUN apt-get update && apt-get dist-upgrade -yq && \
     apt-get install libpcre3-dev libssl-dev golang net-tools \
-    	libmysqlclient-dev mysql-client g++ libmaxminddb-dev \
-    	libmaxminddb0 libicu-dev gettext libasprintf-dev \
-    	make cmake python2.7-dev liblua5.2-dev libperl-dev git -yq && \
+    libmysqlclient-dev mysql-client g++ libmaxminddb-dev \
+    libmaxminddb0 libicu-dev gettext libasprintf-dev \
+    make cmake python2.7-dev liblua5.2-dev libperl-dev git -yq && \
     apt-get clean -y && \
     apt-get autoclean -y && \
     rm -fr /var/lib/apt && \
