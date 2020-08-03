@@ -4,8 +4,8 @@ MAINTAINER Przemek Wiejak <przemek@wiejak.app>
 ENV DEBIAN_FRONTEND noninteractive
 ENV HOME /root
 
-RUN apt-get update && \
-    apt-get install libpcre3-dev libssl-dev mysql-server \
+RUN apt-get update && apt-get dist-upgrade -yq && \
+    apt-get install libpcre3-dev libssl-dev golang net-tools \
     	libmysqlclient-dev mysql-client g++ libmaxminddb-dev \
     	libmaxminddb0 libicu-dev gettext libasprintf-dev \
     	make cmake python2.7-dev liblua5.2-dev libperl-dev git -yq && \
@@ -15,7 +15,10 @@ RUN apt-get update && \
     git clone https://github.com/Verlihub/verlihub.git /usr/src/verlihub && \
     cd /usr/src/verlihub && \
     mkdir -p build && cd build && \
-    cmake .. &&  make && make install
+    cmake .. && make && make install && ldconfig && \
+    git clone https://github.com/Verlihub/tls-proxy.git /usr/src/verlihub-proxy && \
+    cd /usr/src/verlihub-proxy && \
+    go build proxy.go
 
 ADD start.sh /usr/local/bin/start.sh
 
