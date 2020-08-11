@@ -43,8 +43,19 @@ then
     /usr/bin/openssl req -new -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out "/etc/verlihub/verlihub.crt" -keyout "/etc/verlihub/verlihub.key"
     echo ""
 
+    echo "backing keys and logs:"
+    mv -r "${log_dir}" "/tmp/vh"
+    mv -r "/etc/verlihub/verlihub.crt" "/tmp/vh.crt"
+    mv -r "/etc/verlihub/verlihub.key" "/tmp/vh.key"
+    echo ""
+
     echo "Create New Hub:"
     /usr/local/bin/vh --install
+
+    echo "restoring keys and logs:"
+    mv -r "/tmp/vh" "${log_dir}"
+    mv "/tmp/vh.crt" "/etc/verlihub/verlihub.crt"
+    mv "/tmp/vh.key" "/etc/verlihub/verlihub.key"
 
     echo ""
     echo "Completed!"
@@ -115,8 +126,8 @@ then
     echo "Public Address: $address_public"
     echo ""
 
-    #/usr/bin/nohup /usr/src/verlihub-proxy/proxy --cert="/etc/verlihub/verlihub.crt" --key="/etc/verlihub/verlihub.key" --host="${address_public}:4111" --hub="${address_local}:4111" &> "${log_tls}" &
-    /usr/bin/nohup /usr/src/verlihub-proxy/proxy --cert="/etc/verlihub/verlihub.crt" --key="/etc/verlihub/verlihub.key" --host="172.17.0.1:4111" --hub="${address_local}:4111" &> "${log_tls}" &
+    /usr/bin/nohup /usr/src/verlihub-proxy/proxy --cert="/etc/verlihub/verlihub.crt" --key="/etc/verlihub/verlihub.key" --host="${address_public}:4111" --hub="${address_local}:4111" &> "${log_tls}" &
+    #/usr/bin/nohup /usr/src/verlihub-proxy/proxy --cert="/etc/verlihub/verlihub.crt" --key="/etc/verlihub/verlihub.key" --host="172.17.0.1:4111" --hub="${address_local}:4111" &> "${log_tls}" &
 
     echo ""
     echo "LOG TLS: ${log_tls}"
@@ -129,7 +140,8 @@ then
     echo ""
 
     TERM=xterm
-    /usr/bin/nohup /usr/local/bin/vh_daemon /usr/local/bin/verlihub &> "${log_hub}"
+    #/usr/bin/nohup /usr/local/bin/vh_daemon /usr/local/bin/verlihub &> "${log_hub}"
+    /usr/bin/nohup /usr/local/bin/vh --run /etc/verlihub &> "${log_hub}" &
 
     echo ""
     echo "LOG HUB: ${log_hub}"
